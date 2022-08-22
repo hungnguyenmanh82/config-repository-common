@@ -5,7 +5,7 @@ spring:
     name:  config-client     # tên này đc load sau sẽ ghi đè lên tên trc đó
     instance_id: config-first
     version: 2.0
-message: " default profile: configServer first, eurekaServer second"
+message: "gitHub: default profile: configServer first, eurekaServer second"
 
 # server.port = 0 = auto assign thì ${server.port} = 0 => đây là vấn đề.
 # springboot config gặp vấn đề về thứ tự config của lib
@@ -118,7 +118,7 @@ info:
     description: learn Springboot
     homeUrl: http://${eureka.instance.hostname}:${local.server.port}/actuator/info
     note: "dùng http request trực tiếp lấy thông tin ở spring configServer"
-    configServerUrl: http://localhost:8887/${spring.application.name}/default/${spring.application.instance-id}
+    configServerUrl: http://localhost:8888/${spring.application.name}/default/${spring.application.instance-id}
     test1: "lấy thông tin về app ở application.yml dùng @value"
     testUrl: http://${eureka.instance.hostname}:${local.server.port}/
     test2: "lấy properties Mylib.* từ file application.yml dùng @configurationProperties "
