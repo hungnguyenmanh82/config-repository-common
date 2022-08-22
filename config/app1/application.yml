@@ -1,12 +1,29 @@
 # phần này ko khai báo spring.profiles nên là "default" profile
-# để ý cú pháp:  spring.cloud.config.server.native.searchlocations = /config/{application}/{profile}]
+# để ý cú pháp:  spring.cloud.config.server.native.searchlocations = /config/{application}
 # spring-cloud-config-client sẽ gọi  Uri = /app1/default
 spring:
   application:
     name: app1       # = {application}
-    version: 1.0
+    version: 2.0
+message: "default profile: config-first no eureka"
+
 server:
-  port: 8888
+  port: 8889   # 0 = auto assign
+
+myLib:
+  param1: value1
+  param2: value2
+  comment: "dùng @ConfigurationProperties để map thông tin sau với JavaObject"
+
+# ========================================== logging ===========================
+# log level khác với Log4j2: OFF FATAL ERROR WARN INFO DEBUG TRACE
+logging:
+  level:
+    root: TRACE
+    org.springframework.web: INFO
+    org.springframework.cloud: TRACE
+    org.springframework.*: INFO
+    org.hibernate: WARN
 
 ---
 spring:

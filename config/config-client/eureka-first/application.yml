@@ -1,0 +1,84 @@
+# phần này dùng để test App sẽ lấy config từ ConfigServer trc. Sau đó mới connect tới eureka Server để register
+# như vậy phần config Eureka cho app sẽ lấy từ configServer
+spring:
+  application:
+    name:  config-client     # tên này đc load sau sẽ ghi đè lên tên trc đó
+    version: 2.0
+message: " default profile: eurekaServer first, configServer second"
+
+myLib:
+  param1: value1
+  param2: value2
+  comment: "dùng @ConfigurationProperties để map thông tin sau với JavaObject"
+
+# ========================================== logging ===========================
+# log level khác với Log4j2: OFF FATAL ERROR WARN INFO DEBUG TRACE
+logging:
+  level:
+    root: TRACE
+    org.springframework.web: INFO
+    org.springframework.cloud: TRACE
+    org.springframework.*: INFO
+    org.hibernate: WARN
+
+# ============================================= actuator =======================
+# Mornitor tool for: CPU, RAM, ...
+#   http://localhost:8001/actuator
+# lưu ý nếu bên thứ 3 truy cập vào Actuator server bằng browser thì cần phải enable CORS ở mục này (dùng lib thì ko cần)
+management:
+  #server:
+    #port: ${server.port}  # để cùng Port với Server.port cũng ko sao. Bản chất là add controller của actuator vào server thôi
+  # thay đổi contextPath của actuator
+  #context-path:/actuator
+  endpoints:
+    # có thể expose Mornitor ra các chuẩn khác nhau (ở Prometheus gọi là exporter)
+    # expose dạng "web" hoặc "jmx" (là 1 protocol của java) => thay "web" bằng "jmx" là đc
+    # management.endpoints.jmx.exposure.include=health,info,env,beans
+    web:
+      exposure:
+        # management.endpoints.web.exposure.include=beans, loggers, health, env
+        include: "*"    # cho phép các tính năng hoạt động: cache, env, info, metric,...
+        # management.endpoints.web.exposure.exclude=threaddump
+      shutdown:
+        enabled: true
+  # mỗi 1 endpoint sẽ có 1 option thiết lập riêng
+  # hiển thị chi tiết thông tin của health giống cách mà Vertx làm => STATUS parent = UP khi tất cả các child của nó UP
+  endpoint:
+    health:
+      show-details: always
+      enabled: true # false: disable tính năng này ở Actuator. Nhưng EurekaClient vẫn dùng thư viện Actuator/healthCheck bình thuòng
+    info:
+      enabled: true # false: actuator server sẽ ko expose tính năng này ra web
+    configprops:
+      enabled: true # false: actuator server sẽ ko expose tính năng này ra web
+  # phải có cái này thì mới cho phép lấy thông tin Env "info" để add vào "/actuator/info"
+  info:
+    env:
+      enabled: true
+# ===================================== "/actuator/info"
+# Actuator sẽ tự động add tất cả các thuộc tính của "info:" vào "/actuator/info"
+# ${local.server.port}: = server.port nhưng địa chỉ này ở runtime đc
+info:
+  app:
+    name: ${eureka.instance.instanceId}
+    version: 1.2
+    description: learn Springboot
+    homeUrl: http://${eureka.instance.hostname}:${local.server.port}/actuator/info
+    note: "dùng http request trực tiếp lấy thông tin ở spring configServer"
+    configServerUrl: http://localhost:8887/${spring.application.name}/default/${spring.application.instance-id}
+    test1: "lấy thông tin về app ở application.yml dùng @value"
+    testUrl: http://${eureka.instance.hostname}:${local.server.port}/
+    test2: "lấy properties Mylib.* từ file application.yml dùng @configurationProperties "
+    test2Url: http://${eureka.instance.hostname}:${local.server.port}/test
+
+---
+spring:
+  profiles:         # = {profile}
+    - dev           # spring-cloud-config-client sẽ gọi Uri = /app1/dev
+message: version for dev
+
+---
+spring:
+  profiles:         # = {profile}
+    - prod          # spring-cloud-config-client sẽ gọi Uri = /app1/prod
+message: version for product
