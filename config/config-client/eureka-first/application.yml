@@ -64,10 +64,10 @@ info:
     version: 1.2
     description: learn Springboot
     homeUrl: http://${eureka.instance.hostname}:${local.server.port}/actuator/info
-    note: "dùng http request trực tiếp lấy thông tin ở spring configServer"
-    configServerUrl: http://localhost:8887/${spring.application.name}/default/${spring.application.instance-id}
+    note: "configServer + Github"
+    configServerUrl: http://localhost:8888/${spring.application.name}/default/${spring.application.instance-id}
     test1: "lấy thông tin về app ở application.yml dùng @value"
-    testUrl: http://${eureka.instance.hostname}:${local.server.port}/
+    test1Url: http://${eureka.instance.hostname}:${local.server.port}/
     test2: "lấy properties Mylib.* từ file application.yml dùng @configurationProperties "
     test2Url: http://${eureka.instance.hostname}:${local.server.port}/test
 
