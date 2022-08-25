@@ -44,6 +44,15 @@ management:
   # mỗi 1 endpoint sẽ có 1 option thiết lập riêng
   # hiển thị chi tiết thông tin của health giống cách mà Vertx làm => STATUS parent = UP khi tất cả các child của nó UP
   endpoint:
+    refresh:          # = http POST
+      enabled: true
+    # restart sẽ Unregister EurekaServer, khởi động lại app từ đầu và register Eureka từ đầu
+    restart:          # = http POST.  /actuator/restart, actuator/pause, actuator/resume
+      enabled: true
+    pause:
+      enabled: true
+    resume:
+      enable: true
     health:
       show-details: always
       enabled: true # false: disable tính năng này ở Actuator. Nhưng EurekaClient vẫn dùng thư viện Actuator/healthCheck bình thuòng
