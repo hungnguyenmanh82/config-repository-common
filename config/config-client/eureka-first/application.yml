@@ -81,13 +81,17 @@ info:
     test2Url: http://${eureka.instance.hostname}:${local.server.port}/test
 
 ---
-spring:
-  profiles:         # = {profile}
-    - dev           # spring-cloud-config-client sẽ gọi Uri = /app1/dev
+# YAML chấp nhận cả cách viết này
+# spring.config.activate.on-profile từ Spring 2.4 thay cho spring.profiles ở Springboot 2.3
+# {profile} = dev sẽ dùng Document này
+spring.config.activate.on-profile: dev
 message: version for dev
 
 ---
-spring:
-  profiles:         # = {profile}
-    - prod          # spring-cloud-config-client sẽ gọi Uri = /app1/prod
+# {profile} = prod sẽ dùng Document này
+spring.config.activate.on-profile: prod
 message: version for product
+---
+# {profile} = test1, test2 sẽ dùng Document này
+spring.config.activate.on-profile: [test1, test2]    # [] là cách viết ở json chấp nhận ở YAML, dấu {} ở json cũng đc chấp nhận ở YAML
+message: version for test
